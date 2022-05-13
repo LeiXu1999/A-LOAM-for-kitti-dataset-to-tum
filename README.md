@@ -1,5 +1,14 @@
+# A-LOAM for kitti dataset to tum
+This project is modified on the basis of [kitti for A-LOAM](https://github.com/Mitchell-Lee-93/kitti-A-LOAM.git).
+The main changes are:
+1. Print out the time corresponding to the pose.
+2. RESULT_PATH and RESULT_TIME will be stored in "A-LOAM/result"(There will be the problem of file data coverage. Don't forget to save the data every experiment :smile).
+3. In the "A-LOAM/result" folder, there is a script file for Kitti to convert tum.
+```
+./kitti_poses_and_timestamps_to_trajectory.py RESULT_PATH.txt RUSULT_TIME.txt kitt2tum.txt
+```
+The following is the readme of the original package:
 # A-LOAM for kitti dataset
-
 This repository contains modified code of A-LOAM to run and evaluate with kitti-data set. When you run the code, you'll get the trajectory results of A-LOAM in KITTI groundtruth format and you can directly evalutate the result with KITTI gt by EVO-eval kit. A-LOAM already has the kitti helper for kitti-data usage but I found that it has some problem with directories, so I modified it. Wish you find it helpful, especially who are not familiar with ROS and LOAM.
 
 ## 1. Prerequisites
@@ -47,7 +56,7 @@ roslaunch kittibag kittibag.launch
 ```
 gedit ~/catkin_ws/src/A-LOAM/launch/aloam_velodyne_HDL_64.launch
 ```
-Change 'RESULT_PATH' to your result dir
+Change 'RESULT_PATH' to your result dir(Of course, you can also find the result in the "result" folder without changing it)
 
 ### 4.2 Run the launch file:
 ```

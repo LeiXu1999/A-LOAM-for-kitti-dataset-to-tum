@@ -1,7 +1,8 @@
 <launch>
     
     <param name="scan_line" type="int" value="64" />
-    <param name="RESULT_PATH" type="string" value="/home/hglee/catkin_ws/src/A-LOAM/A_123.txt" />
+    <param name="RESULT_PATH" type="string" value=" $(find aloam_velodyne)/result/RESULT_PATH.txt" />
+    <param name="RESULT_TIME" type="string" value=" $(find aloam_velodyne)/result/RESULT_TIME.txt" />
 
     <!-- if 1, do mapping 10 Hz, if 2, do mapping 5 Hz. Suggest to use 1, it will adjust frequence automaticlly -->
     <param name="mapping_skip_frame" type="int" value="1" />

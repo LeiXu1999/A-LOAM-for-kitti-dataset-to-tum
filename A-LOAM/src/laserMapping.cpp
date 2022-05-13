@@ -57,6 +57,7 @@
 #include <thread>
 #include <iostream>
 #include <string>
+#include <chrono>
 
 #include "lidarFactor.hpp"
 #include "aloam_velodyne/common.h"
@@ -129,6 +130,7 @@ std::queue<sensor_msgs::PointCloud2ConstPtr> fullResBuf;
 std::queue<nav_msgs::Odometry::ConstPtr> odometryBuf;
 std::mutex mBuf;
 std::string RESULT_PATH;
+std::string RESULT_TIME;
 
 pcl::VoxelGrid<PointType> downSizeFilterCorner;
 pcl::VoxelGrid<PointType> downSizeFilterSurf;
@@ -203,7 +205,7 @@ void laserOdometryHandler(const nav_msgs::Odometry::ConstPtr &laserOdometry)
 	mBuf.lock();
 	odometryBuf.push(laserOdometry);
 	mBuf.unlock();
-
+	//ROS_INFO(“current_times: %f”,ros:time::now());
 	// high frequence publish
 	Eigen::Quaterniond q_wodom_curr;
 	Eigen::Vector3d t_wodom_curr;
@@ -284,8 +286,17 @@ void laserOdometryHandler(const nav_msgs::Odometry::ConstPtr &laserOdometry)
 
                         }
                 }
-
-                foutC.close();
+			    
+				std::ofstream f(RESULT_TIME, std::ios::app);        
+				f.setf(std::ios::scientific, std::ios::floatfield);
+				f.precision(12);
+				auto static t1 = std::chrono::high_resolution_clock::now();
+				auto t2 = std::chrono::high_resolution_clock::now();
+				auto elased_time = std::chrono::duration_cast<std::chrono::nanoseconds>(t2-t1).count()/1.0e9;
+				std::cout<<"Consumed Time(s): "<< elased_time <<std::endl;
+				f<< elased_time<<std::endl;
+				f.close();
+				foutC.close();
 
 
         //////////////////////////////////////////////////
@@ -965,6 +976,7 @@ int main(int argc, char **argv)
 	float planeRes = 0;
 
 	nh.getParam("RESULT_PATH", RESULT_PATH);
+	nh.getParam("RESULT_TIME", RESULT_TIME);
 	nh.param<float>("mapping_line_resolution", lineRes, 0.4);
 	nh.param<float>("mapping_plane_resolution", planeRes, 0.8);
 	printf("line resolution %f plane resolution %f \n", lineRes, planeRes);
